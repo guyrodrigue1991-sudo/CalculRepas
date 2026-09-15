@@ -1,0 +1,129 @@
+plugins { id 'com.android.application' }
+
+android { namespace 'com.example.calculrepas'; compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.example.calculrepas'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+    }
+}
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application android:theme="@style/AppTheme" android:label="Calcul repas">
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout android:orientation="vertical" android:padding="24dp"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <TextView android:text="Calcul du repas" android:textSize="28sp" android:textStyle="bold"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp"/>
+
+    <TextView android:text="Prix du menu (€)" android:textSize="16sp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <EditText android:id="@+id/menu" android:inputType="numberDecimal"
+        android:text="4,56" android:hint="Ex. 4,56"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <TextView android:text="Admission / part employeur (€)" android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <EditText android:id="@+id/admission" android:inputType="numberDecimal"
+        android:text="6,46" android:hint="Ex. 6,46"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <TextView android:text="Subvention (€)" android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <EditText android:id="@+id/subvention" android:inputType="numberDecimal"
+        android:text="8" android:hint="Ex. 8"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <Button android:id="@+id/calculate" android:text="CALCULER"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <TextView android:id="@+id/result" android:text="À payer : 3,02 €"
+        android:textSize="25sp" android:textStyle="bold"
+        android:gravity="center" android:padding="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <TextView android:text="Formule : prix du menu + admission − subvention"
+        android:textSize="14sp" android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+</LinearLayout>
+</ScrollView>
+
+<resources>
+<style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+    <item name="android:fontFamily">sans</item>
+    <item name="android:colorAccent">#1565C0</item>
+</style>
+</resources>
+
+package com.example.calculrepas;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.*;
+import java.util.Locale;
+
+public class MainActivity extends Activity {
+    EditText menu, admission, subvention;
+    TextView result;
+
+    double val(EditText e) {
+        try { return Double.parseDouble(e.getText().toString().replace(",", ".")); }
+        catch(Exception ex) { return 0; }
+    }
+
+    @Override public void onCreate(Bundle b) {
+        super.onCreate(b);
+        setContentView(R.layout.activity_main);
+        menu=findViewById(R.id.menu);
+        admission=findViewById(R.id.admission);
+        subvention=findViewById(R.id.subvention);
+        result=findViewById(R.id.result);
+
+        findViewById(R.id.calculate).setOnClickListener(v -> {
+            double total = val(menu) + val(admission) - val(subvention);
+            if (total < 0) total = 0;
+            result.setText(String.format(Locale.FRANCE, "À payer : %.2f €", total));
+        });
+    }
+}
+
+plugins {
+    id 'com.android.application' version '8.7.3' apply false
+}
+
+# Calcul Repas
+
+Application Android simple pour calculer le montant à payer.
+
+Formule :
+Prix du menu + Admission - Subvention
+
+Exemple par défaut :
+4,56 + 6,46 - 8,00 = 3,02 €
+
+Ouvrir ce dossier dans Android Studio puis Build > Build APK(s).
+
+pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
+rootProject.name = "CalculRepas"
+include(":app")
