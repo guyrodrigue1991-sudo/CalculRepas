@@ -12,8 +12,8 @@ jobs:
       - name: Récupérer le projet
         uses: actions/checkout@v4
 
-      - name: Installer Java
-        uses: actions/setup-java@v4
+      - name: Installer Java 17
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -22,12 +22,15 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Installer Gradle
-        uses: gradle/actions/setup-gradle@v4
+        run: |
+          wget -q https://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+          unzip -q gradle-8.10.2-bin.zip -d $HOME/gradle
+          echo "$HOME/gradle/gradle-8.10.2/bin" >> $GITHUB_PATH
 
       - name: Construire l'APK
         run: gradle assembleDebug
 
-      - name: Télécharger l'APK
+      - name: Récupérer l'APK
         uses: actions/upload-artifact@v4
         with:
           name: CalculRepas-APK
