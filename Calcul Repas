@@ -1,0 +1,20 @@
+plugins {
+    id 'com.android.application' version '8.7.3' apply false
+}
+
+# Calcul Repas
+
+Application Android simple pour calculer le montant à payer.
+
+Formule :
+Prix du menu + Admission - Subvention
+
+Exemple par défaut :
+4,56 + 6,46 - 8,00 = 3,02 €
+
+Ouvrir ce dossier dans Android Studio puis Build > Build APK(s).
+
+pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
+rootProject.name = "CalculRepas"
+include(":app")
